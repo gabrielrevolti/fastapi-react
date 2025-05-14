@@ -1,15 +1,16 @@
+import os
+from dotenv import load_dotenv
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
-from sqlalchemy.orm import declarative_base
-from sqlalchemy import Column, Integer, String
+from sqlalchemy.orm import sessionmaker, declarative_base
 
-SQLALCHEMY_DATABASE_URL = "mysql+aiomysql://root:root@localhost:3306/fastapireact"
+load_dotenv()
 
-engine = create_async_engine(SQLALCHEMY_DATABASE_URL, echo=True)
+db_url = os.getenv("SQLALCHEMY_DATABASE_URL")
 
-AsyncSessionLocal = async_sessionmaker(
-    bind=engine,
-    expire_on_commit=False,
-    class_=AsyncSession
+engine = create_async_engine(db_url ,echo=True)
+
+async_session = sessionmaker(
+    engine, expire_on_commit=False, class_=AsyncSession
 )
 
 Base = declarative_base()

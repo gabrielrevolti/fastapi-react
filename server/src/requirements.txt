@@ -1,4 +1,3 @@
-bcrypt
 cryptography
 fastapi
 python-jose
@@ -8,3 +7,7 @@ uvicorn
 passlib
 aiomysql
 python-dotenv
+alembic
+psycopg2-binary
+slowapi
+email-validator

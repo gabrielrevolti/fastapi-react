@@ -1,0 +1,15 @@
+label {
+ font-size: 20px;
+}
+
+input {
+ width: 180px;
+ height: 15px;
+}
+
+.container-flex {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+
+}
