@@ -5,7 +5,7 @@ python-multipart
 SQLAlchemy
 uvicorn
 passlib
-aiomysql
+pymysql
 python-dotenv
 alembic
 psycopg2-binary

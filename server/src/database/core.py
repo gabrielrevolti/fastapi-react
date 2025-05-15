@@ -13,7 +13,7 @@ database = os.getenv("DB_DATABASE")
 port = os.getenv("DB_PORT")
 host = os.getenv("DB_HOST")
 
-DATABASE_URL = "mysql+aiomysql://{user}:{password}@{host}:{port}/{database}"
+DATABASE_URL = f"mysql+pymysql://{user}:{password}@{host}:{port}/{database}"
 
 engine = create_engine(DATABASE_URL)
 
