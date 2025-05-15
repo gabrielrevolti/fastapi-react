@@ -1,12 +1,11 @@
-# src/auth/service.py
 import os
 from datetime import datetime, timedelta, timezone
 from jose import JWTError, jwt
-from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from src.users.service import get_login_user
+from src.users import service
 from src.auth import model
+from pymysql.connections import Connection  # <- tipagem correta
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = "HS256"
@@ -31,9 +30,9 @@ def verify_token(token: str) -> model.TokenData:
         raise HTTPException(status_code=403, detail="Token is invalid or expired")
 
 def login_for_access_token(
-    form_data: OAuth2PasswordRequestForm, db: Session
+    form_data: OAuth2PasswordRequestForm, db: Connection
 ) -> model.Token:
-    user = get_login_user(form_data.username, form_data.password, db)
+    user = service.get_login_user(form_data.username, form_data.password, db)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -41,7 +40,7 @@ def login_for_access_token(
             headers={"WWW-Authenticate": "Bearer"},
         )
     access_token = create_access_token(
-        data={"sub": user.SMTP_USER},
+        data={"sub": user["USER"]},
         expires_delta=timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     )
     return model.Token(access_token=access_token, token_type="bearer")

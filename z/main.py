@@ -1,14 +1,14 @@
 import os
 import uvicorn
-from database import async_session
+from z.database import async_session
 from dotenv import load_dotenv
 from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.security import OAuth2AuthorizationCodeBearer, OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from jose import JWTError, jwt
 from datetime import datetime, timedelta, timezone
 from passlib.context import CryptContext
-from models import User
-from database import AsyncSession
+from z.models import User
+from z.database import AsyncSession
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import select, and_
 

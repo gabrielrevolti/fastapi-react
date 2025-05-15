@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from .api import register_routes
+from .routes import register_routes
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
@@ -20,5 +20,5 @@ app.add_middleware(
 )
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="localhost", port=8000, reload=True)
+    uvicorn.run("src.main:app", host="localhost", port=8000, reload=True)
 

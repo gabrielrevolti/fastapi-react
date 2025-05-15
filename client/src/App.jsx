@@ -1,17 +1,11 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Login from './Login';
-import ProtectedPage from './Protected';
+import {RouterProvider } from 'react-router-dom';
+import router from './router';
 
 function App() {
   
   return (
-    <Router>
-      <Routes>
-      <Route path="/" element={<Login />} />
-      <Route path="/protected" element={<ProtectedPage />} />
-      </Routes>
-    </Router>
+    <RouterProvider router={router}/>
   );
 }
 

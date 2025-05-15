@@ -1,31 +1,28 @@
+import pymysql
 from typing import Annotated
-from fastapi import Depends
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, Session, declarative_base
+from typing import Generator
 import os
+from fastapi import Depends
 from dotenv import load_dotenv
 
 load_dotenv()
 
-user = os.getenv("DB_USERNAME")
-password = os.getenv("DB_PASSWORD")
-database = os.getenv("DB_DATABASE")
-port = os.getenv("DB_PORT")
-host = os.getenv("DB_HOST")
+def get_connection() -> pymysql.connections.Connection:
+    return pymysql.connect(
+        host=os.getenv("DB_HOST"),
+        user=os.getenv("DB_USERNAME"),
+        password=os.getenv("DB_PASSWORD"),
+        database=os.getenv("DB_DATABASE"),
+        port=int(os.getenv("DB_PORT")),
+        cursorclass=pymysql.cursors.DictCursor
+    )
 
-DATABASE_URL = f"mysql+pymysql://{user}:{password}@{host}:{port}/{database}"
 
-engine = create_engine(DATABASE_URL)
-
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-Base = declarative_base()
-
-def get_db():
-    db = SessionLocal()
+def get_db() -> Generator[pymysql.connections.Connection, None, None]:
+    db = get_connection()
     try:
         yield db
     finally:
         db.close()
         
-DbSession = Annotated[Session, Depends(get_db)]
+DbConnection = Annotated[pymysql.connections.Connection, Depends(get_db)]
