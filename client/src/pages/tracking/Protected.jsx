@@ -16,7 +16,7 @@ function ProtectedPage() {
         }
       } catch (error) {
         localStorage.removeItem('token');
-        navigate('/');
+        navigate('/tracking/login');
       }
     };
 

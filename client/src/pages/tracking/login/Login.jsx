@@ -1,13 +1,15 @@
+// Login.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import "./Login.css"
+import { useAuth } from '../../../context/AuthContext';
+import "./Login.css";
 
 function Login() {
+  const { login } = useAuth();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-
   const navigate = useNavigate();
 
   const validateForm = () => {
@@ -31,23 +33,20 @@ function Login() {
     try {
       const response = await fetch('http://localhost:8000/auth/token', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: formDetails,
       });
 
+      const data = await response.json();
       setLoading(false);
 
       if (response.ok) {
-        const data = await response.json();
-        localStorage.setItem('token', data.access_token);
+        login(data.access_token);
         navigate('/tracking/processos');
       } else {
-        const errorData = await response.json();
-        setError(errorData.detail || 'Authentication failed!');
+        setError(data.detail || 'Authentication failed!');
       }
-    } catch (error) {
+    } catch {
       setLoading(false);
       setError('An error occurred. Please try again later.');
     }
@@ -58,19 +57,11 @@ function Login() {
       <form onSubmit={handleSubmit}>
         <div>
           <label>Email : </label>
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
+          <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
         </div>
         <div>
           <label>Senha : </label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
         </div>
         <button type="submit" disabled={loading}>
           {loading ? 'Logging in...' : 'Login'}
