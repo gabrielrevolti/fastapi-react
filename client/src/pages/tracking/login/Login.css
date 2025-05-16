@@ -1,15 +1,22 @@
-label {
- font-size: 20px;
-}
-
-input {
- width: 180px;
- height: 15px;
-}
-
-.container-flex {
-    height: 100vh;
+.containerLoginGeneral {
     display: flex;
     justify-content: center;
-
+    gap: 140px;
 }
+
+.containerLoginArea {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+}
+
+.background {
+    background-image:linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),  url("../../../assets/background-login-upscaled.jpg"); 
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+

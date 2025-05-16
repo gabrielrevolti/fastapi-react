@@ -1,0 +1,32 @@
+.wrap {
+    display: flex;
+    position: relative;
+    height: 70px;
+    margin: auto;
+}
+
+.iconWrap {
+    display: flex;
+    position: absolute;
+    background-color: var(--color-button-black);
+    height: 100%;
+    padding: 20px;
+    font-size: 30px;
+    align-items: center;
+    border-radius: 12px;
+    color: white;
+}
+
+.inputBox {
+    padding-left: 100px;
+    font-size: larger;
+    font-weight: 400;
+    width: 380px;
+    background-color: lightgray;
+    border-radius: 15px;
+    border: none;
+}
+
+.inputBox::placeholder {
+    color: white;
+}
