@@ -3,16 +3,19 @@ const styleButton = {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    width: '250px',
-    height: '60px',
+    width: '13.78125rem',   
+    height: '3.28125rem',     
     color: 'white',
-    borderRadius: '28px'
-}
+    borderRadius: '1.53125rem', 
+    cursor: 'pointer'
+  };
+
+  
 const Button = ({ text, disabled, func}) => {
 
     return (
         <div style={styleButton} disabled={disabled} onClick={func}>
-            <span>{text}</span>
+            <span style={{fontSize: 'var(--font-md)'}}>{text}</span>
         </div>
     )
 }

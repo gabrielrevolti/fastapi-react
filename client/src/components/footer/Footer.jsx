@@ -6,18 +6,14 @@ const styleFooter = {
     justifyContent: 'center',
     alignItems: 'center',
     width: '100vw',
-    height: '100px',
-    position: 'fixed',
-    bottom: '0',
-    left: '0',
-    zIndex: '1000',
+    height: '10vh',
 }
 
 const Footer = () => {
 
   return (
     <div style={styleFooter}>
-        <p>Todos direitos reservados Mactek ©{new Date().getFullYear()}</p>
+        <p style={{fontSize: 'var(--font-md)'}}>Todos direitos reservados Mactek ©{new Date().getFullYear()}</p>
     </div>
   )
 }

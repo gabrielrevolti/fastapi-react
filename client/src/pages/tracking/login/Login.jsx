@@ -1,5 +1,5 @@
 // Login.jsx
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
 import "./Login.css";
@@ -7,26 +7,39 @@ import Input from '../../../components/input/Input';
 import { FaUser } from "react-icons/fa";
 import { FaLock } from "react-icons/fa";
 import Card from '../../../components/card/Card';
-import Footer from '../../../components/footer/Footer';
 import Button from '../../../components/button/Button';
+import Footer from '../../../components/footer/Footer';
 import { FaMapMarkerAlt } from "react-icons/fa";
+import { ToastContainer, toast } from 'react-toastify';
 
 const Login = () => {
   const { login } = useAuth();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [trackingCode, setTrackingCode] = useState('')
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const validateForm = () => {
     if (!username || !password) {
-      setError('Username and password are required');
+      toast.error('Email e senha necessários!');
       return false;
     }
-    setError('');
     return true;
   };
+
+  const handleDataCapFast = async () => {
+      try {
+        const response = await fetch(`http://localhost:8000/process/cap-fast/${trackingCode}`);
+        console.log(response.json())
+        if (!response.ok) {
+          toast.error("Erro!")
+        }
+      } catch (error) {
+    
+      }
+
+  }
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -51,27 +64,26 @@ const Login = () => {
         login(data.access_token);
         navigate('/tracking/processos');
       } else {
-        setError(data.detail || 'Authentication failed!');
+        toast.error("Usuário ou senha incorretos!")
       }
     } catch {
       setLoading(false);
-      setError('An error occurred. Please try again later.');
     }
   };
 
   return (
     <>
       <div className='background containerLoginArea'>
-        <p style={{ fontSize: '32px', fontWeight: 'bold', marginBottom: '60px' }}>Seja bem vindo(a) ao Tracking</p>
+        <p style={{ fontSize: 'var(--font-3xl)', fontWeight: 'bold', marginBottom: '60px' }}>Seja bem vindo(a) ao Tracking</p>
 
         <div className='containerLoginGeneral'>
           <Card>
-            <p style={{ fontSize: '28px', fontWeight: '600' }}>Login</p>
+            <p className='cardTitle'>Login</p>
 
 
             <div>
               <div className='inputWrap'>
-                <Input placeholder="Email" type="text" value={username} onChange={(e) => setUsername(e.target.value)}>
+                <Input placeholder="Usuário (email)" type="text" value={username} onChange={(e) => setUsername(e.target.value)}>
                   <FaUser />
                 </Input>
               </div>
@@ -84,26 +96,38 @@ const Login = () => {
             </div>
 
             <Button text="Login" disabled={loading} func={handleSubmit} />
-            {error && <span style={{ color: 'red' }}>{error}</span>}
           </Card>
 
-          <Card style={{ justifyContent: 'unset', paddingTop: '44px' }}>
-            <p style={{ fontSize: '28px', fontWeight: '600' }}>Consulta Rápida</p>
+          <Card style={{ justifyContent: 'unset', paddingTop: '2.75rem' }}>
+            <p className='cardTitle'>Consulta Rápida</p>
 
             <div>
               <div className='inputWrap'>
-                <Input placeholder="Cod. de Rastreamento" type="text" value={username} onChange={(e) => setUsername(e.target.value)}>
+                <Input placeholder="Cod. de Rastreamento" type="text" value={trackingCode} onChange={(e) => setTrackingCode(e.target.value)}>
                   <FaMapMarkerAlt />
                 </Input>
               </div>
             </div>
 
-            <Button text="Consultar" disabled={loading} func={handleSubmit} />
-
+            <Button text="Consultar" disabled={loading} func={handleDataCapFast}/>
           </Card>
+
+          <ToastContainer
+            position="top-right"
+            autoClose={5000}
+            pauseOnFocusLoss={false}
+            hideProgressBar={false}
+            pauseOnHover={false}
+            newestOnTop={false}
+            closeOnClick={false}
+            rtl={false}
+            draggable
+            theme="colored"
+          />
         </div>
-        <Footer />
       </div>
+
+      <Footer />
     </>
 
   );

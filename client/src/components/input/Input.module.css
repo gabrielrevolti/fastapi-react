@@ -1,7 +1,7 @@
 .wrap {
     display: flex;
     position: relative;
-    height: 70px;
+    height: 3.71875rem;
     margin: auto;
 }
 
@@ -10,20 +10,20 @@
     position: absolute;
     background-color: var(--color-button-black);
     height: 100%;
-    padding: 20px;
-    font-size: 30px;
+    padding: 1.09375rem;      
+    font-size: 1.640625rem;
     align-items: center;
-    border-radius: 12px;
+    border-radius: 0.65625rem; 
     color: white;
 }
 
 .inputBox {
-    padding-left: 100px;
-    font-size: larger;
+    padding-left: 5.46875rem;     
+    font-size: var(--font-md);              
     font-weight: 400;
-    width: 380px;
+    width: 20.78125rem;          
     background-color: lightgray;
-    border-radius: 15px;
+    border-radius: 0.8203125rem; 
     border: none;
 }
 

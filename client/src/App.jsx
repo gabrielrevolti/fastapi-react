@@ -5,7 +5,7 @@ import ProtectedPage from './pages/tracking/Protected';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import PublicRoute from './components/PublicRoute';
-import Layout from './Layout';
+import Layout from './components/Layout';
 
 function App() {
   return (
