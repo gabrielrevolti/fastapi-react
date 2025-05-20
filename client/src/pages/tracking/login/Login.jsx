@@ -111,8 +111,8 @@ const Login = () => {
 
             <Button text="Consultar" disabled={loading} func={handleDataCapFast}/>
           </Card>
-
-          <ToastContainer
+        </div>
+            <ToastContainer
             position="top-right"
             autoClose={5000}
             pauseOnFocusLoss={false}
@@ -124,7 +124,6 @@ const Login = () => {
             draggable
             theme="colored"
           />
-        </div>
       </div>
 
       <Footer />
