@@ -4,29 +4,32 @@ import Login from './pages/tracking/login/Login';
 import ProtectedPage from './pages/tracking/Protected';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
+import { ChakraProvider } from '@chakra-ui/react'
 import PublicRoute from './components/PublicRoute';
 import Layout from './components/Layout';
 
 function App() {
   return (
-    <AuthProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Navigate to="/tracking/login" />} />
-          <Route path="/tracking" element={<Navigate to="/tracking/login"/>}/>
+    <ChakraProvider>
+      <AuthProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Navigate to="/tracking/login" />} />
+            <Route path="/tracking" element={<Navigate to="/tracking/login" />} />
 
-          <Route path="/tracking" element={<Layout/>}>
-            <Route element={<PublicRoute />}>
-              <Route path="login" element={<Login />} />
-            </Route>
+            <Route path="/tracking" element={<Layout />}>
+              <Route element={<PublicRoute />}>
+                <Route path="login" element={<Login />} />
+              </Route>
 
-            <Route element={<ProtectedRoute />}>
-              <Route path="processos" element={<ProtectedPage />} />
+              <Route element={<ProtectedRoute />}>
+                <Route path="processos" element={<ProtectedPage />} />
+              </Route>
             </Route>
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    </AuthProvider>
+          </Routes>
+        </BrowserRouter>
+      </AuthProvider>
+    </ChakraProvider>
   );
 }
 

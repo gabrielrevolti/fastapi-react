@@ -1,5 +1,5 @@
 // Login.jsx
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
 import "./Login.css";
@@ -11,13 +11,16 @@ import Button from '../../../components/button/Button';
 import Footer from '../../../components/footer/Footer';
 import { FaMapMarkerAlt } from "react-icons/fa";
 import { ToastContainer, toast } from 'react-toastify';
+import ModalProcessFast from '../../../components/modalProcessFast/ModalProcessFast';
 
 const Login = () => {
   const { login } = useAuth();
   const [username, setUsername] = useState('');
+  const [modalProcessFast, setModalProcessFast] = useState(false);
   const [password, setPassword] = useState('');
   const [trackingCode, setTrackingCode] = useState('')
   const [loading, setLoading] = useState(false);
+  const [trackingData, setTrackingData] = useState('')
   const navigate = useNavigate();
 
   const validateForm = () => {
@@ -28,17 +31,24 @@ const Login = () => {
     return true;
   };
 
+  const toggleModalProcessFast = () => {
+    setModalProcessFast(!modalProcessFast)
+  }
+
   const handleDataCapFast = async () => {
       try {
         const response = await fetch(`http://localhost:8000/process/cap-fast/${trackingCode}`);
-        console.log(response.json())
-        if (!response.ok) {
+        if(response.ok) {
+          const data = await response.json()
+          console.log(data)
+          setTrackingData(data)
+          toggleModalProcessFast()
+        }else {
           toast.error("Erro!")
         }
       } catch (error) {
-    
+        
       }
-
   }
 
   const handleSubmit = async (event) => {
@@ -111,8 +121,8 @@ const Login = () => {
 
             <Button text="Consultar" disabled={loading} func={handleDataCapFast}/>
           </Card>
-        </div>
-            <ToastContainer
+
+          <ToastContainer
             position="top-right"
             autoClose={5000}
             pauseOnFocusLoss={false}

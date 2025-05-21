@@ -21,8 +21,10 @@
 }
 
 body {
-  font-family: var(--main-font);
+  font-family: var(--main-font) !important;
+  color: black !important;
   background-color: lightgray;
+  line-height: normal !important;
 }
 
 .containerLayout {
@@ -32,7 +34,7 @@ body {
 
 .containerFlexItems {
   width: 100vw;
-  height: 90vh;
+  height: 92vh;
   display: flex;
   flex-direction: column;
   justify-content: center;

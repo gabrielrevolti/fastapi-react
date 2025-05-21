@@ -6,7 +6,7 @@ const styleFooter = {
     justifyContent: 'center',
     alignItems: 'center',
     width: '100vw',
-    height: '10vh',
+    height: '8vh',
 }
 
 const Footer = () => {
