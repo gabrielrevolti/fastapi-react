@@ -1,8 +1,22 @@
 from src.database.core import DbConnection
 
+def getStatusTimeLine(process, db: DbConnection):
+    sql = """
+        SELECT 
+            DATE_CREATION,
+            IS_CONFIRMED_OUTPUT,
+            FORECASTS_OUTPUT,
+            FORECASTS_ARRIVAL,
+            IS_CONFIRMED_ARRIVAL 
+		from M0020_SHIPMENT_HOUSE 
+		where SHIPMENT_NUMBER = %s OR HOUSE_NUMBER = %s OR  RESERVED_NUMBER = %s;
+    """
+    with db.cursor() as cursor:
+        cursor.execute(sql, (process, process, process))
+        return cursor.fetchone()
 
 
-def getStatusData(process, db: DbConnection):
+def getOccurrences(process, db: DbConnection):
     sql = """
         SELECT 
             CAST("99" AS INT) AS ORDEM,
@@ -20,7 +34,7 @@ def getStatusData(process, db: DbConnection):
         SELECT 
             ORDER_NUMBER AS ORDEM,
             DESCRIPTION AS DESCRICAO,
-            DATE_STATUS AS DATA
+            IF(DATE_STATUS IS NOT NULL,DATE_STATUS,SUBSTRING(INFORMATION,1,10)) AS DATA
         FROM M0020_SHIPMENT_STATUS 
         WHERE HOUSE_FK = (
             SELECT SH.ID FROM M0020_SHIPMENT_HOUSE SH
@@ -33,7 +47,7 @@ def getStatusData(process, db: DbConnection):
     
     with db.cursor() as cursor:
         cursor.execute(sql, (process, process, process, process, process, process))
-        return cursor.fetchone()
+        return cursor.fetchall()
 
 def getGeneralDataCapFast(process, db: DbConnection):
     sql = """

@@ -6,6 +6,7 @@ import {
     StepDescription,
     StepIcon,
     StepIndicator,
+    StepNumber,
     StepSeparator,
     StepStatus,
     StepTitle,
@@ -17,18 +18,41 @@ import {
 
 const ModalProcessFast = ({ trackingData ,state, func}) => {
 
-    const steps = [
-        { title: 'Embarque Criado', description: '01/01/2025' },
-        { title: 'Embarque Previsto', description: '00/00/2025' },
-        { title: 'Em Trânsito', description: '00/00/2025' },
-        { title: 'Chegada', description: null},
-        { title: 'Finalizado', description: null },
-      ]
+    const status = trackingData.statusTimeLine
+    const generalDataCap = Object.values(trackingData?.generalDataCap || {})
+    const occurences = Object.values(trackingData?.occurrences || {})
+    let steps = []
 
-    const { activeStep } = useSteps({
-        index: 1,
-        count: steps.length,
-      })
+    console.log('Queries')
+    console.log(status)
+    console.log(generalDataCap)
+    console.log(occurences)
+
+    if (occurences.length > 20) {
+        steps = 
+            occurences.map((occurence) => (
+                { title: occurence["DESCRICAO"], description: occurence["DATA"]}
+            ) )
+        
+    } else {
+        steps = [
+            { title: 'Embarque Criado', description: status?.DATE_CREATION, validation: status?.DATE_CREATION},
+            { title: 'Embarque Previsto', description: status?.FORECASTS_ARRIVAL, validation: status?.FORECASTS_ARRIVAL },
+            { title: 'Em Trânsito', description: status?.FORECASTS_OUTPUT, validation: status?.FORECASTS_OUTPUT },
+            { title: 'Chegada', description: null, validation: status?.IS_CONFIRMED_ARRIVAL},
+            { title: 'Finalizado', description: null, validation: status?.IS_CONFIRMED_OUTPUT},
+          ]
+    }
+ 
+    console.log(steps)
+
+    const validSteps = steps.filter((step) => {
+        const desc = step.validation
+        return typeof desc === 'string' && (
+            /\d{4}-\d{2}-\d{2}/.test(desc) || // data no formato aaaa-mm-dd
+            desc.includes('\u0001')          // ou contém \u0001
+        )
+    })
 
         if (state) {
             document.body.classList.add('active-modal')
@@ -46,16 +70,16 @@ const ModalProcessFast = ({ trackingData ,state, func}) => {
                     <div className="divisor1">
                         <p className="titleModal">Linha do Tempo</p>
                         <div className="marginTeste">
-                            <Stepper size="lg" index={activeStep} orientation='vertical' height='500px' gap='0' colorScheme="green">
+
+                            <Stepper size="lg" index={validSteps.length} orientation='vertical' height='500px' gap='0' colorScheme="green">
                                 {steps.map((step, index) => (
                                     <Step key={index}>
-                        
                                             <StepIndicator>
-                                                <StepStatus complete={<StepIcon/>} />
+                                                <StepStatus complete={<StepIcon/>}/>
                                             </StepIndicator>
 
                                             <Box>
-                                                <StepTitle fontSize="lg">{step.title}</StepTitle>
+                                                <StepTitle>{step.title}</StepTitle>
                                                 <StepDescription>{step.description}</StepDescription>
                                             </Box>
                         
@@ -63,6 +87,7 @@ const ModalProcessFast = ({ trackingData ,state, func}) => {
                                     </Step>
                                 ))}
                             </Stepper>
+                            
                         </div>
                     </div>
 
