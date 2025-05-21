@@ -21,8 +21,10 @@
 }
 
 body {
-  font-family: var(--main-font);
+  font-family: var(--main-font) !important;
+  color: black !important;
   background-color: lightgray;
+  line-height: normal !important;
 }
 
 .containerLayout {
