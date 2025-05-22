@@ -97,6 +97,71 @@ def getGeneralDataCapFast(process, db: DbConnection):
         WHERE SH.SHIPMENT_NUMBER = %s OR SH.HOUSE_NUMBER = %s OR SH.RESERVED_NUMBER = %s
         LIMIT 1;
         """
+    
+    with db.cursor() as cursor:
+        cursor.execute(sql, (process, process, process))
+        return cursor.fetchone()
+    
+
+def getAttachedDocuments(process, db: DbConnection):
+    sql = """
+        SELECT
+            SAF.COMMENTS AS 'NOME',
+            SAF.FILENAME AS 'ARQUIVO',
+            SAF.PATH AS 'PATH'
+        FROM M0020_SHIPMENT_ATTACHMENT_FILE SAF
+        INNER JOIN M0020_SHIPMENT_HOUSE SH ON SH.ID = SAF.HOUSE_FK
+        WHERE SAF.IS_SHOW_IN_TRACKING = TRUE 
+        AND (SH.SHIPMENT_NUMBER = %s OR SH.HOUSE_NUMBER = %s OR  SH.RESERVED_NUMBER = %s)
+    """
+
+    with db.cursor() as cursor:
+        cursor.execute(sql, (process, process, process))
+        return cursor.fetchall()
+
+def getContainers(process, db: DbConnection):
+    sql = """
+        SELECT
+        CT.CODE AS 'TIPO',
+        SC.CONTAINER_NUMBER AS 'CONTAINER',
+        SC.NET_WEIGHT AS 'NET_WEIGHT'
+        FROM M0020_SHIPMENT_CONTAINER SC
+        INNER JOIN M0108_CONTAINER_TYPE CT ON CT.ID = SC.CONTAINER_TYPE_FK
+        INNER JOIN M0020_SHIPMENT_HOUSE SH ON SH.ID = SC.HOUSE_FK  
+        WHERE SH.SHIPMENT_NUMBER = %s OR SH.HOUSE_NUMBER = %s OR  SH.RESERVED_NUMBER = %s
+    """
+
+    with db.cursor() as cursor:
+        cursor.execute(sql, (process, process, process))
+        return cursor.fetchall()
+
+
+def getMaritimeTranshipment(process, db: DbConnection):
+    sql = """
+        SELECT
+            MPT.NAME_PORT AS 'PORTO',
+            CONCAT(SHIP.NAME, ' - ',TR.TRAVEL_NUMBER) AS 'NAVIO', TR.DATE_FINISH AS 'ETA', TR.DATE_OUT AS 'ETA'
+        FROM M0020_TRANSHIPMENT TR
+        INNER JOIN M0105_MAPORT MPT ON MPT.ID = TR.PORT_FK 
+        LEFT JOIN M0401_SHIP SHIP ON SHIP.ID = TR.SHIP_FK 
+        INNER JOIN M0020_SHIPMENT_HOUSE SH ON SH.ID = TR.HOUSE_FK
+        WHERE SH.SHIPMENT_NUMBER = %s OR SH.HOUSE_NUMBER = %s OR  SH.RESERVED_NUMBER = %s
+    """
+
+    with db.cursor() as cursor:
+        cursor.execute(sql, (process, process, process))
+        return cursor.fetchone()
+
+def getAerialTranshipment(process, db: DbConnection):
+    sql = """
+        SELECT
+            MPT.NAME_PORT AS 'PORTO',
+            TR.DATE_OUT AS 'ETA'
+        FROM M0020_TRANSHIPMENT TR
+        INNER JOIN M0105_MAPORT MPT ON MPT.ID = TR.PORT_FK 
+        INNER JOIN M0020_SHIPMENT_HOUSE SH ON SH.ID = TR.HOUSE_FK
+        WHERE SH.SHIPMENT_NUMBER = %s OR SH.HOUSE_NUMBER = %s OR  SH.RESERVED_NUMBER = %s
+    """
 
     with db.cursor() as cursor:
         cursor.execute(sql, (process, process, process))
