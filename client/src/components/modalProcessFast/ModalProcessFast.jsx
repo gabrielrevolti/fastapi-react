@@ -49,8 +49,8 @@ const ModalProcessFast = ({ trackingData, state, func }) => {
   const validSteps = steps.filter((step) => {
     const desc = step.validation
     return typeof desc === 'string' && (
-      /\d{4}-\d{2}-\d{2}/.test(desc) || // data no formato aaaa-mm-dd
-      desc.includes('\u0001')          // ou contém \u0001
+      /\d{4}-\d{2}-\d{2}/.test(desc) ||
+      desc.includes('\u0001')
     )
   })
 
@@ -95,32 +95,17 @@ const ModalProcessFast = ({ trackingData, state, func }) => {
 
                 {(generalDataCap.PROCESSO.startsWith('CAI') || generalDataCap.PROCESSO.startsWith('CAE')) && (
                   <div style={{ display: 'flex', height: '400px' }}>
-                    <div className="gridFields">
                       <AerialStructure info={generalDataCap} />
                     </div>
-
-                  </div>
                 )}
 
                 {(generalDataCap.PROCESSO.startsWith('CMI') || generalDataCap.PROCESSO.startsWith('CME')) && (
                   <div style={{ display: 'flex', height: '400px' }}>
-                    <div className="gridFields">
-                      <MaritimeStructure info={generalDataCap} />
-                    </div>
-                    <div>
-                      <div>
-                        <p><strong>Conteiners: </strong></p>
-                        <div className="containerArray">
-                          <span><strong>Tipo:</strong>{generalDataCap.CONTAINERS[0].TIPO}</span>
-                          <span><strong>Num:</strong>{generalDataCap.CONTAINERS[0].NET_WEIGHT}</span>
-                          <span><strong>Vol:</strong>{generalDataCap.CONTAINERS[0].CONTAINER}</span>
-                        </div>
-                      </div>
-                    </div>
+                    <MaritimeStructure info={generalDataCap} />
                   </div>
                 )}
 
-
+                {(generalDataCap.PROCESSO.startsWith(''))}
               </div>
             </div>
 

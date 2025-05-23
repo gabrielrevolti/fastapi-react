@@ -27,8 +27,8 @@ height: 46.875rem;
 border-radius: 28px;
 display: flex;
 justify-content: center;
-gap: 100px;
-padding: 60px;
+gap: 80px;
+padding: 60px 50px 60px 50px;
 }
 
 .close-modal {
@@ -67,20 +67,6 @@ margin-bottom: 2rem;
 margin-left: 65px;
 }
 
-/* .gridFields {
-    display: grid;
-    grid-auto-flow: column;
-    grid-template-rows: repeat(auto-fill, minmax(0, auto));
-    grid-template-columns: repeat(2, 1fr);
-    row-gap: 1.5rem;
-    max-height: 250px;
-  }
-  
-  .gridFields p {
-    break-inside: avoid;
-    width: 20rem;
-  } */
-
   .gridFields {
     display: grid;
     grid-auto-flow: column;
@@ -97,10 +83,23 @@ margin-left: 65px;
 
   .containerArray {
     margin-top: 5px;
+    width: 200px;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
     border: 1px solid lightgray ;
     padding: 7px;
     border-radius: 8px;
+  }
+
+  .documents {
+    margin-left: 15px;
+  }
+
+  .documents span{
+    margin-bottom: 5px;
+  }
+
+  .linkStyle {
+    color: #0BBBEB;
   }

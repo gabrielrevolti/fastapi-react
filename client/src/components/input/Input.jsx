@@ -1,10 +1,10 @@
 import React from 'react'
 import styles from "./Input.module.css"
 
-const Input = ({ children, placeholder, type, ...props}) => {
+const Input = ({ children,icon , placeholder, type, ...props}) => {
   return (
     <div className={styles.wrap}>
-        <div className={styles.iconWrap}>{children}</div>
+        <div className={styles.iconWrap}>{icon}</div>
          <input className={styles.inputBox} type={type} placeholder={placeholder} {...props}/>
     </div>
   )

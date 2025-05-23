@@ -10,8 +10,9 @@ import Card from '../../../components/card/Card';
 import Button from '../../../components/button/Button';
 import Footer from '../../../components/footer/Footer';
 import { FaMapMarkerAlt } from "react-icons/fa";
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import ModalProcessFast from '../../../components/modalProcessFast/ModalProcessFast';
+import api from '../../../api';
 
 const Login = () => {
   const { login } = useAuth();
@@ -23,29 +24,19 @@ const Login = () => {
   const [trackingData, setTrackingData] = useState('')
   const navigate = useNavigate();
 
-  const validateForm = () => {
-    if (!username || !password) {
-      toast.error('Email e senha necessários!');
-      return false;
-    }
-    return true;
-  };
-
   const toggleModalProcessFast = () => {
     setModalProcessFast(!modalProcessFast)
   }
 
   const handleDataCapFast = async () => {
       try {
-        const response = await fetch(`http://localhost:8000/process/cap-fast/${trackingCode}`);
-        if(response.ok) {
-          const data = await response.json()
+        if (!trackingCode) return  toast.error("Cod.de rastreamento necessário")
+
+        const response =  await api.get(`/process/cap-fast/${trackingCode}`);
+          const data = response.data;
           console.log(data)
           setTrackingData(data)
           toggleModalProcessFast()
-        }else {
-          toast.error("Erro!")
-        }
       } catch (error) {
         
       }
@@ -53,31 +44,39 @@ const Login = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (!validateForm()) return;
+    if (!username || !password) return toast.error('Email e senha necessários!');
     setLoading(true);
 
-    const formDetails = new URLSearchParams();
-    formDetails.append('username', username);
-    formDetails.append('password', password);
-
     try {
-      const response = await fetch('http://localhost:8000/auth/token', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: formDetails,
-      });
+      const formDetails = new URLSearchParams();
+      formDetails.append('username', username);
+      formDetails.append('password', password);
 
-      const data = await response.json();
+      const response = await api.post('/auth/token', formDetails, {
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+      })
+
+      // const response = await fetch('http://localhost:8000/auth/token', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      //   body: formDetails,
+      // });
+
+      // const data = await response.json();
+
       setLoading(false);
 
-      if (response.ok) {
-        login(data.access_token);
-        navigate('/tracking/processos');
+      login(response.data.access_token);
+      navigate('/tracking/processos');
+
+    } catch (error) {
+      setLoading(false);
+
+      if (error.response && error.response.status === 401) {
+        toast.error('Usuário ou senha incorretos!');
       } else {
-        toast.error("Usuário ou senha incorretos!")
+        toast.error('Erro na autenticação, tente novamente.');
       }
-    } catch {
-      setLoading(false);
     }
   };
 
@@ -93,16 +92,12 @@ const Login = () => {
 
             <div>
               <div className='inputWrap'>
-                <Input placeholder="Usuário (email)" type="text" value={username} onChange={(e) => setUsername(e.target.value)}>
-                  <FaUser />
-                </Input>
+                <Input icon={<FaUser/>} placeholder="Usuário (email)" type="text" value={username} onChange={(e) => setUsername(e.target.value)}/>
               </div>
             </div>
 
             <div className='inputWrap'>
-              <Input placeholder="Senha" type="password" value={password} onChange={(e) => setPassword(e.target.value)}>
-                <FaLock />
-              </Input>
+              <Input placeholder="Senha" icon={<FaLock />} type="password" value={password} onChange={(e) => setPassword(e.target.value)}/>
             </div>
 
             <Button text="Login" disabled={loading} func={handleSubmit} />
@@ -113,30 +108,16 @@ const Login = () => {
 
             <div>
               <div className='inputWrap'>
-                <Input placeholder="Cod. de Rastreamento" type="text" value={trackingCode} onChange={(e) => setTrackingCode(e.target.value)}>
-                  <FaMapMarkerAlt />
-                </Input>
+                <Input icon={<FaMapMarkerAlt />} placeholder="Cod. de Rastreamento" type="text" value={trackingCode} onChange={(e) => setTrackingCode(e.target.value)}/>
               </div>
             </div>
 
             <Button text="Consultar" disabled={loading} func={handleDataCapFast}/>
           </Card>
         </div>
-
-          <ModalProcessFast trackingData={trackingData} state={modalProcessFast} func={toggleModalProcessFast}/>
-
-          <ToastContainer
-            position="top-right"
-            autoClose={5000}
-            pauseOnFocusLoss={false}
-            hideProgressBar={false}
-            pauseOnHover={false}
-            newestOnTop={false}
-            closeOnClick={false}
-            rtl={false}
-            draggable
-            theme="colored"
-          />
+          {modalProcessFast && 
+            <ModalProcessFast trackingData={trackingData} state={modalProcessFast} func={toggleModalProcessFast}/>
+          }
       </div>
 
       <Footer />

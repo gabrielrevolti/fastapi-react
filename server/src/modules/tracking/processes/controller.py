@@ -6,5 +6,9 @@ from src.modules.tracking.processes import service
 router = APIRouter(prefix="/process", tags=["process"])
 
 @router.get("/cap-fast/{process}")
-def get_cap_by_process(process, db: DbConnection):
+def getCapByProcess(process, db: DbConnection):
     return service.getCapByProcessFast(process, db)
+
+@router.get("/documents")
+def openDocument(path: str):
+    return service.getAtachedDocuments(path)
